@@ -1,0 +1,566 @@
+(* Content-type: application/vnd.wolfram.mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 9.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       157,          7]
+NotebookDataLength[     23124,        557]
+NotebookOptionsPosition[     22852,        543]
+NotebookOutlinePosition[     23195,        558]
+CellTagsIndexPosition[     23152,        555]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{
+   RowBox[{"BeginPackage", "[", "\"\<CustomStatisticsFunctions`\>\"", "]"}], 
+   ";"}], "\[IndentingNewLine]", 
+  RowBox[{"(*", "\[IndentingNewLine]", 
+   RowBox[{"Given", " ", "data", " ", "in", " ", "the", " ", "following", " ", 
+    RowBox[{"format", ":", " ", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"{", 
+          RowBox[{"ID1", ",", " ", "pvalue1"}], "}"}], ",", " ", 
+         RowBox[{"{", 
+          RowBox[{"ID2", ",", " ", "pvalue2"}], "}"}], ",", " ", 
+         RowBox[{"{", 
+          RowBox[{"ID3", ",", " ", "pvalue3"}], "}"}], ",", " ", "etc"}], 
+        "}"}], "\[IndentingNewLine]", "\[IndentingNewLine]", "This", " ", 
+       "function", " ", "runs", " ", "the", " ", "Benjamini"}], "-", 
+      RowBox[{
+      "Hochberg", " ", "correction", " ", "and", " ", "returns", " ", "an", 
+       " ", "array", " ", "of", " ", "the", " ", "following", " ", "form"}]}],
+      ":", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"{", 
+         RowBox[{"ID1", ",", " ", "pvalue1", ",", " ", "adjPvalue1"}], "}"}], 
+        ",", " ", 
+        RowBox[{"{", 
+         RowBox[{"ID2", ",", " ", "pvalue2", ",", " ", "adjPvalue2"}], "}"}], 
+        ",", " ", 
+        RowBox[{"{", 
+         RowBox[{"ID3", ",", " ", "pvalue3", ",", " ", "adjPvalue3"}], "}"}], 
+        ",", " ", "etc"}], "}"}], "\[IndentingNewLine]", 
+      "\[IndentingNewLine]", "Ed", " ", "Huttlin"}]}]}], 
+   "\[IndentingNewLine]", "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"BenjaminiHochbergAdjustPValues", "[", "list_", "]"}], ":=", 
+    RowBox[{"Module", "[", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{
+       "adjustedList", ",", " ", "sortList", ",", " ", "numPValues", ",", " ",
+         "minP", ",", " ", "i", ",", " ", "oldP", ",", " ", "newP"}], "}"}], 
+      ",", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"adjustedList", " ", "=", " ", 
+        RowBox[{"{", "}"}]}], ";", "\[IndentingNewLine]", 
+       RowBox[{"sortList", " ", "=", " ", 
+        RowBox[{"Sort", "[", 
+         RowBox[{"list", ",", " ", 
+          RowBox[{
+           RowBox[{
+            RowBox[{"#1", "[", 
+             RowBox[{"[", "2", "]"}], "]"}], " ", ">", " ", 
+            RowBox[{"#2", "[", 
+             RowBox[{"[", "2", "]"}], "]"}]}], " ", "&"}]}], "]"}]}], ";", 
+       "\[IndentingNewLine]", "\[IndentingNewLine]", 
+       RowBox[{"numPValues", " ", "=", " ", 
+        RowBox[{"Length", "[", "list", "]"}]}], ";", "\[IndentingNewLine]", 
+       RowBox[{"minP", " ", "=", " ", "1"}], ";", "\[IndentingNewLine]", 
+       "\[IndentingNewLine]", 
+       RowBox[{"temp", " ", "=", " ", 
+        RowBox[{"Reap", "[", "\[IndentingNewLine]", 
+         RowBox[{
+          RowBox[{"For", "[", 
+           RowBox[{
+            RowBox[{"i", "=", "1"}], ",", " ", 
+            RowBox[{"i", "\[LessEqual]", "numPValues"}], ",", " ", 
+            RowBox[{"i", "++"}], ",", "\[IndentingNewLine]", 
+            RowBox[{
+             RowBox[{"oldP", " ", "=", " ", 
+              RowBox[{"sortList", "[", 
+               RowBox[{"[", 
+                RowBox[{"i", ",", "2"}], "]"}], "]"}]}], ";", 
+             "\[IndentingNewLine]", 
+             RowBox[{"newP", " ", "=", " ", 
+              RowBox[{"oldP", " ", "*", " ", 
+               RowBox[{"numPValues", " ", "/", " ", 
+                RowBox[{"(", 
+                 RowBox[{
+                 "numPValues", " ", "-", " ", "i", " ", "+", " ", "1"}], 
+                 ")"}]}]}]}], ";", "\[IndentingNewLine]", 
+             RowBox[{"If", "[", 
+              RowBox[{
+               RowBox[{"minP", " ", "<", " ", "newP"}], ",", 
+               "\[IndentingNewLine]", 
+               RowBox[{
+                RowBox[{"newP", " ", "=", " ", "minP"}], ";"}], 
+               "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
+               RowBox[{"minP", " ", "=", " ", "newP"}]}], 
+              "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
+             "\[IndentingNewLine]", 
+             RowBox[{"Sow", "[", 
+              RowBox[{
+               RowBox[{"sortList", "[", 
+                RowBox[{"[", 
+                 RowBox[{"i", ",", " ", "1"}], "]"}], "]"}], "\[Rule]", 
+               RowBox[{"Join", "[", 
+                RowBox[{
+                 RowBox[{"sortList", "[", 
+                  RowBox[{"[", "i", "]"}], "]"}], ",", " ", 
+                 RowBox[{"{", "newP", "}"}]}], "]"}]}], "]"}], ";"}]}], 
+           "\[IndentingNewLine]", "\[IndentingNewLine]", 
+           RowBox[{"(*", " ", 
+            RowBox[{
+             RowBox[{"Sow", "[", 
+              RowBox[{"Join", "[", 
+               RowBox[{
+                RowBox[{"sortList", "[", 
+                 RowBox[{"[", "i", "]"}], "]"}], ",", " ", 
+                RowBox[{"{", "newP", "}"}]}], "]"}], "]"}], ";"}], " ", 
+            "*)"}], "\[IndentingNewLine]", 
+           RowBox[{"(*", 
+            RowBox[{
+             RowBox[{"adjustedList", " ", "=", " ", 
+              RowBox[{"Append", "[", 
+               RowBox[{"adjustedList", ",", " ", 
+                RowBox[{"Join", "[", 
+                 RowBox[{
+                  RowBox[{"sortList", "[", 
+                   RowBox[{"[", "i", "]"}], "]"}], ",", " ", 
+                  RowBox[{"{", "newP", "}"}]}], "]"}]}], "]"}]}], ";"}], 
+            "*)"}], "\[IndentingNewLine]", "]"}], ";"}], 
+         "\[IndentingNewLine]", "]"}]}], ";", " ", 
+       RowBox[{"(*", " ", 
+        RowBox[{"end", " ", "of", " ", "reap"}], " ", "*)"}], 
+       "\[IndentingNewLine]", "\[IndentingNewLine]", 
+       RowBox[{"adjustedList", " ", "=", " ", 
+        RowBox[{"temp", "[", 
+         RowBox[{"[", 
+          RowBox[{"2", ",", "1"}], "]"}], "]"}]}], ";", "\[IndentingNewLine]",
+        "\[IndentingNewLine]", "adjustedList"}]}], "\[IndentingNewLine]", 
+     "]"}]}], ";"}], "\[IndentingNewLine]", "\[IndentingNewLine]", 
+  RowBox[{"(*", "\[IndentingNewLine]", 
+   RowBox[{
+    RowBox[{"Benjamini", "-", 
+     RowBox[{"Hochberg", " ", "Correction", " ", 
+      RowBox[{"Fucntions", ":", " ", "\[IndentingNewLine]", "data"}]}]}], " ",
+     "=", " ", 
+    RowBox[{
+     RowBox[{
+     "Array", " ", "containing", " ", "dataset", "\[IndentingNewLine]", 
+      "idCol"}], " ", "=", " ", 
+     RowBox[{
+      RowBox[{
+      "index", " ", "of", " ", "column", " ", "containing", " ", "protein", 
+       " ", "ID", " ", 
+       RowBox[{"(", 
+        RowBox[{
+         RowBox[{"e", ".", "g", ".", " ", "UniprotID"}], ",", " ", 
+         RowBox[{"IPI", " ", "number"}], ",", " ", 
+         RowBox[{"or", " ", "any", " ", "other", " ", "identifier"}]}], ")"}],
+        "\[IndentingNewLine]", "pValCol"}], " ", "=", " ", 
+      RowBox[{
+       RowBox[{
+        RowBox[{
+        "index", " ", "of", " ", "column", " ", "containing", " ", "p"}], "-", 
+        RowBox[{"values", "\[IndentingNewLine]", "header"}]}], " ", "=", " ", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"(", 
+          RowBox[{
+           RowBox[{
+           "set", " ", "to", " ", "1", " ", "if", " ", "the", " ", "data", 
+            " ", "array", " ", "contains", " ", "a", " ", "header", " ", 
+            "row"}], ";", " ", 
+           RowBox[{"0", " ", "otherwise"}]}], ")"}], "\[IndentingNewLine]", 
+         "name"}], " ", "=", " ", 
+        RowBox[{
+         RowBox[{
+         "string", " ", "you", " ", "want", " ", "to", " ", "attach", " ", 
+          "to", " ", "the", " ", "P"}], "-", 
+         RowBox[{"value", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+          RowBox[{"Output", ":", " ", 
+           RowBox[{
+            RowBox[{
+            "the", " ", "array", " ", "data", " ", "with", " ", "one", " ", 
+             "additional", " ", "column", " ", "added", " ", "containing", 
+             " ", "adjusted", " ", "p"}], "-", 
+            RowBox[{
+             RowBox[{"values", ".", "\[IndentingNewLine]", "Ed"}], " ", 
+             "Huttlin"}]}]}]}]}]}]}]}]}]}], "\[IndentingNewLine]", 
+   "*)"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"BenjaminiHochbergCorrection", "[", 
+     RowBox[{
+     "data_", ",", " ", "idCol_", ",", " ", "pValCol_", ",", " ", "header_", 
+      ",", " ", "name_"}], "]"}], " ", ":=", " ", 
+    RowBox[{"Module", "[", 
+     RowBox[{
+      RowBox[{"{", "}"}], ",", "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"pValueList", " ", "=", " ", 
+        RowBox[{"data", "[", 
+         RowBox[{"[", 
+          RowBox[{"All", ",", " ", 
+           RowBox[{"{", 
+            RowBox[{"idCol", ",", " ", "pValCol"}], "}"}]}], "]"}], "]"}]}], 
+       ";", "\[IndentingNewLine]", 
+       RowBox[{"pValueList", " ", "=", " ", 
+        RowBox[{"Cases", "[", 
+         RowBox[{"pValueList", ",", " ", 
+          RowBox[{"a_", "/;", 
+           RowBox[{"NumberQ", "[", 
+            RowBox[{"a", "[", 
+             RowBox[{"[", "2", "]"}], "]"}], "]"}]}]}], "]"}]}], ";", 
+       "\[IndentingNewLine]", "\[IndentingNewLine]", 
+       RowBox[{"adjP", " ", "=", " ", 
+        RowBox[{"BenjaminiHochbergAdjustPValues", "[", "pValueList", "]"}]}], 
+       ";", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+       RowBox[{"newData", " ", "=", " ", 
+        RowBox[{"{", "}"}]}], ";", "\[IndentingNewLine]", 
+       RowBox[{"start", " ", "=", " ", "1"}], ";", "\[IndentingNewLine]", 
+       RowBox[{"reap", " ", "=", " ", 
+        RowBox[{"Reap", "[", "\[IndentingNewLine]", 
+         RowBox[{
+          RowBox[{"If", "[", 
+           RowBox[{
+            RowBox[{"header", " ", "\[Equal]", " ", "1"}], ",", " ", 
+            RowBox[{"start", " ", "=", " ", "2"}]}], "]"}], ";", 
+          "\[IndentingNewLine]", 
+          RowBox[{"For", "[", 
+           RowBox[{
+            RowBox[{"ii", " ", "=", "start"}], ",", " ", 
+            RowBox[{"ii", "\[LessEqual]", 
+             RowBox[{"Length", "[", "data", "]"}]}], ",", " ", 
+            RowBox[{"ii", "++"}], ",", "\[IndentingNewLine]", 
+            RowBox[{
+             RowBox[{"current", " ", "=", " ", 
+              RowBox[{"data", "[", 
+               RowBox[{"[", "ii", "]"}], "]"}]}], ";", "\[IndentingNewLine]", 
+             RowBox[{"id", " ", "=", " ", 
+              RowBox[{"current", "[", 
+               RowBox[{"[", "idCol", "]"}], "]"}]}], ";", 
+             "\[IndentingNewLine]", "\[IndentingNewLine]", 
+             RowBox[{"newP", " ", "=", " ", "\"\<NA\>\""}], ";", 
+             "\[IndentingNewLine]", 
+             RowBox[{"match", " ", "=", " ", 
+              RowBox[{"id", " ", "/.", " ", "adjP"}]}], ";", 
+             "\[IndentingNewLine]", 
+             RowBox[{"(*", " ", 
+              RowBox[{
+               RowBox[{"match", " ", "=", " ", 
+                RowBox[{"Cases", "[", 
+                 RowBox[{"adjP", ",", " ", 
+                  RowBox[{"a_", "/;", " ", 
+                   RowBox[{
+                    RowBox[{"a", "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], " ", "\[Equal]", " ", 
+                    "id"}]}]}], "]"}]}], ";"}], " ", "*)"}], 
+             "\[IndentingNewLine]", 
+             RowBox[{"If", "[", 
+              RowBox[{
+               RowBox[{
+                RowBox[{"Length", "[", "match", "]"}], " ", ">", " ", "0"}], 
+               ",", " ", 
+               RowBox[{"newP", " ", "=", " ", 
+                RowBox[{"match", "[", 
+                 RowBox[{"[", "3", "]"}], "]"}]}]}], "]"}], ";", 
+             "\[IndentingNewLine]", "\[IndentingNewLine]", 
+             RowBox[{"Sow", "[", 
+              RowBox[{"Join", "[", 
+               RowBox[{"current", ",", " ", 
+                RowBox[{"{", "newP", "}"}]}], "]"}], "]"}], ";"}]}], 
+           "\[IndentingNewLine]", 
+           RowBox[{"(*", " ", 
+            RowBox[{
+             RowBox[{"newData", " ", "=", " ", 
+              RowBox[{"Append", "[", 
+               RowBox[{"newData", ",", " ", 
+                RowBox[{"Join", "[", 
+                 RowBox[{"current", ",", " ", 
+                  RowBox[{"{", "newP", "}"}]}], "]"}]}], "]"}]}], ";"}], 
+            "*)"}], "\[IndentingNewLine]", "]"}], ";"}], 
+         "\[IndentingNewLine]", "]"}]}], ";", " ", 
+       RowBox[{"(*", " ", 
+        RowBox[{"end", " ", "of", " ", "Reap"}], " ", "*)"}], 
+       "\[IndentingNewLine]", "\[IndentingNewLine]", 
+       RowBox[{"newData", " ", "=", " ", 
+        RowBox[{"reap", "[", 
+         RowBox[{"[", 
+          RowBox[{"2", ",", "1"}], "]"}], "]"}]}], ";", "\[IndentingNewLine]",
+        "\[IndentingNewLine]", 
+       RowBox[{"If", "[", 
+        RowBox[{
+         RowBox[{"header", " ", "\[Equal]", " ", "1"}], ",", 
+         "\[IndentingNewLine]", 
+         RowBox[{
+          RowBox[{"newData", " ", "=", " ", 
+           RowBox[{"Prepend", "[", 
+            RowBox[{"newData", ",", " ", 
+             RowBox[{"Join", "[", 
+              RowBox[{
+               RowBox[{"data", "[", 
+                RowBox[{"[", "1", "]"}], "]"}], ",", " ", 
+               RowBox[{"{", 
+                RowBox[{"\"\<adjP_\>\"", "<>", "name"}], "}"}]}], "]"}]}], 
+            "]"}]}], ";"}]}], "\[IndentingNewLine]", "]"}], ";", 
+       "\[IndentingNewLine]", "newData"}]}], "\[IndentingNewLine]", "]"}]}], 
+   ";"}], "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"binomialTest", "[", 
+     RowBox[{
+     "trials_", ",", " ", "successes_", ",", " ", "probability_", ",", " ", 
+      RowBox[{"tails_:", "\"\<two.sided\>\""}]}], "]"}], ":=", 
+    RowBox[{"Module", "[", 
+     RowBox[{
+      RowBox[{"{", 
+       RowBox[{
+       "probs", ",", " ", "pVal", ",", " ", "pValG", ",", " ", "pValL", ",", 
+        " ", "pExact", ",", " ", "expCount", ",", " ", "pVal2"}], "}"}], ",", 
+      "\[IndentingNewLine]", 
+      RowBox[{"(*", " ", 
+       RowBox[{"calculate", " ", "probabilities"}], " ", "*)"}], 
+      "\[IndentingNewLine]", 
+      RowBox[{
+       RowBox[{"probs", " ", "=", " ", 
+        RowBox[{"Transpose", "[", 
+         RowBox[{"{", 
+          RowBox[{
+           RowBox[{"Table", "[", 
+            RowBox[{"i", ",", " ", 
+             RowBox[{"{", 
+              RowBox[{"i", ",", " ", "1", ",", " ", "trials"}], "}"}]}], 
+            "]"}], ",", 
+           RowBox[{"Thread", "[", 
+            RowBox[{"binomial", "[", 
+             RowBox[{"trials", ",", " ", 
+              RowBox[{"Table", "[", 
+               RowBox[{"i", ",", " ", 
+                RowBox[{"{", 
+                 RowBox[{"i", ",", " ", "1", ",", " ", "trials"}], "}"}]}], 
+               "]"}], ",", " ", "probability"}], "]"}], "]"}]}], "}"}], 
+         "]"}]}], ";", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+       RowBox[{"pVal", " ", "=", " ", 
+        RowBox[{"-", "1"}]}], ";", "\[IndentingNewLine]", 
+       "\[IndentingNewLine]", 
+       RowBox[{"(*", " ", 
+        RowBox[{
+         RowBox[{"One", "-", "tailed"}], ",", " ", "greater"}], " ", "*)"}], 
+       "\[IndentingNewLine]", 
+       RowBox[{"pValG", " ", "=", " ", 
+        RowBox[{"Total", "[", 
+         RowBox[{
+          RowBox[{"Cases", "[", 
+           RowBox[{"probs", ",", " ", 
+            RowBox[{"a_", "/;", " ", 
+             RowBox[{
+              RowBox[{"a", "[", 
+               RowBox[{"[", "1", "]"}], "]"}], " ", "\[GreaterEqual]", " ", 
+              "successes"}]}]}], "]"}], "[", 
+          RowBox[{"[", 
+           RowBox[{"All", ",", " ", "2"}], "]"}], "]"}], "]"}]}], ";", 
+       "\[IndentingNewLine]", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+       RowBox[{"(*", " ", 
+        RowBox[{
+         RowBox[{"One", "-", "tailed"}], ",", " ", "less"}], " ", "*)"}], 
+       "\[IndentingNewLine]", 
+       RowBox[{"pValL", " ", "=", " ", 
+        RowBox[{"Total", "[", 
+         RowBox[{
+          RowBox[{"Cases", "[", 
+           RowBox[{"probs", ",", " ", 
+            RowBox[{"a_", "/;", " ", 
+             RowBox[{
+              RowBox[{"a", "[", 
+               RowBox[{"[", "1", "]"}], "]"}], " ", "<=", " ", 
+              "successes"}]}]}], "]"}], "[", 
+          RowBox[{"[", 
+           RowBox[{"All", ",", " ", "2"}], "]"}], "]"}], "]"}]}], ";", 
+       "\[IndentingNewLine]", "\[IndentingNewLine]", 
+       RowBox[{"(*", " ", 
+        RowBox[{
+        "Get", " ", "probability", " ", "for", " ", "exact", " ", "match"}], 
+        " ", "*)"}], "\[IndentingNewLine]", 
+       RowBox[{"pExact", " ", "=", " ", 
+        RowBox[{"binomial", "[", 
+         RowBox[{"trials", ",", " ", "successes", ",", " ", "probability"}], 
+         "]"}]}], ";", "\[IndentingNewLine]", "\[IndentingNewLine]", 
+       RowBox[{"(*", " ", 
+        RowBox[{"Get", " ", "expected", " ", "count"}], " ", "*)"}], 
+       "\[IndentingNewLine]", 
+       RowBox[{"expCount", " ", "=", " ", 
+        RowBox[{"trials", " ", "*", " ", "probability"}]}], ";", 
+       "\[IndentingNewLine]", "\[IndentingNewLine]", 
+       RowBox[{"(*", " ", 
+        RowBox[{"Two", "-", "tailed"}], " ", "*)"}], "\[IndentingNewLine]", 
+       RowBox[{"(*", " ", 
+        RowBox[{
+         RowBox[{
+          RowBox[{
+          "There", " ", "are", " ", "multiple", " ", "ways", " ", "to", " ", 
+           "calculate", " ", "2"}], "-", 
+          RowBox[{"tailed", " ", 
+           RowBox[{"tests", ".", " ", "Using"}], " ", "option", " ", "3", " ",
+            "from", " ", "this", " ", 
+           RowBox[{
+           "website", ":", " ", "\[IndentingNewLine]", "http", ":"}]}]}], "//", 
+         RowBox[{
+          RowBox[{
+           RowBox[{
+            RowBox[{
+             RowBox[{
+              RowBox[{"graphpad", ".", "com"}], "/", "guides"}], "/", 
+             "prism"}], "/", "6"}], "/", "statistics"}], "/", 
+          RowBox[{"index", ".", 
+           RowBox[{"htm", "?", "stat_binomial"}], ".", "htm"}]}]}], 
+        "\[IndentingNewLine]", "*)"}], "\[IndentingNewLine]", 
+       RowBox[{"If", "[", 
+        RowBox[{
+         RowBox[{"successes", " ", ">", " ", "expCount"}], ",", 
+         "\[IndentingNewLine]", 
+         RowBox[{"(*", " ", 
+          RowBox[{
+           RowBox[{
+           "Since", " ", "the", " ", "observed", " ", "number", " ", "of", 
+            " ", "successes", " ", "is", " ", "greater", " ", "than", " ", 
+            "the", " ", "expected", " ", "count"}], ",", " ", 
+           RowBox[{
+            RowBox[{
+            "need", " ", "to", " ", "add", " ", "likelihood", " ", "of", " ", 
+             "beeing", " ", "less", " ", "for", " ", "a", " ", "two"}], "-", 
+            RowBox[{"tailed", " ", 
+             RowBox[{"test", "."}]}]}]}], " ", "*)"}], "\[IndentingNewLine]", 
+         RowBox[{
+          RowBox[{"pVal2", " ", "=", " ", 
+           RowBox[{"pValG", " ", "+", " ", 
+            RowBox[{"Total", "[", 
+             RowBox[{
+              RowBox[{"Cases", "[", 
+               RowBox[{"probs", ",", " ", 
+                RowBox[{"a_", "/;", " ", 
+                 RowBox[{
+                  RowBox[{
+                   RowBox[{"a", "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], " ", "<", " ", 
+                   "successes"}], " ", "&&", " ", 
+                  RowBox[{
+                   RowBox[{"a", "[", 
+                    RowBox[{"[", "2", "]"}], "]"}], " ", "\[LessEqual]", " ", 
+                   "pExact"}]}]}]}], "]"}], "[", 
+              RowBox[{"[", 
+               RowBox[{"All", ",", " ", "2"}], "]"}], "]"}], "]"}]}]}], ";"}],
+          "\[IndentingNewLine]", ",", "\[IndentingNewLine]", 
+         RowBox[{
+          RowBox[{"pVal2", " ", "=", " ", 
+           RowBox[{"pValL", " ", "+", " ", 
+            RowBox[{"Total", "[", 
+             RowBox[{
+              RowBox[{"Cases", "[", 
+               RowBox[{"probs", ",", " ", 
+                RowBox[{"a_", "/;", " ", 
+                 RowBox[{
+                  RowBox[{
+                   RowBox[{"a", "[", 
+                    RowBox[{"[", "1", "]"}], "]"}], " ", ">", " ", 
+                   "successes"}], " ", "&&", " ", 
+                  RowBox[{
+                   RowBox[{"a", "[", 
+                    RowBox[{"[", "2", "]"}], "]"}], " ", "\[LessEqual]", " ", 
+                   "pExact"}]}]}]}], "]"}], "[", 
+              RowBox[{"[", 
+               RowBox[{"All", ",", " ", "2"}], "]"}], "]"}], "]"}]}]}], 
+          ";"}]}], "\[IndentingNewLine]", "]"}], ";", "\[IndentingNewLine]", 
+       "\[IndentingNewLine]", 
+       RowBox[{"If", "[", 
+        RowBox[{
+         RowBox[{"tails", " ", "\[Equal]", " ", "\"\<greater\>\""}], ",", " ", 
+         RowBox[{"pVal", " ", "=", " ", "pValG"}]}], "]"}], ";", 
+       "\[IndentingNewLine]", 
+       RowBox[{"If", "[", 
+        RowBox[{
+         RowBox[{"tails", " ", "\[Equal]", " ", "\"\<less\>\""}], ",", " ", 
+         RowBox[{"pVal", " ", "=", " ", "pValL"}]}], "]"}], ";", 
+       "\[IndentingNewLine]", 
+       RowBox[{"If", "[", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"tails", " ", "\[Equal]", " ", "\"\<two.sided\>\""}], " ", "||",
+           " ", 
+          RowBox[{"!", 
+           RowBox[{"MemberQ", "[", 
+            RowBox[{
+             RowBox[{"{", 
+              RowBox[{"\"\<greater\>\"", ",", " ", "\"\<less\>\""}], "}"}], 
+             ",", " ", "tails"}], "]"}]}]}], ",", " ", 
+         RowBox[{"pVal", " ", "=", " ", "pVal2"}]}], "]"}], ";", 
+       "\[IndentingNewLine]", "\[IndentingNewLine]", "pVal"}]}], 
+     "\[IndentingNewLine]", "]"}]}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{
+    RowBox[{"binomial", "[", 
+     RowBox[{"n_", ",", " ", "c_", ",", " ", "p_"}], "]"}], ":=", " ", 
+    RowBox[{
+     RowBox[{"Binomial", "[", 
+      RowBox[{"n", ",", " ", "c"}], "]"}], "*", 
+     RowBox[{"p", "^", "c"}], " ", "*", " ", 
+     RowBox[{
+      RowBox[{"(", 
+       RowBox[{"1", "-", "p"}], ")"}], "^", 
+      RowBox[{"(", 
+       RowBox[{"n", " ", "-", " ", "c"}], ")"}]}]}]}], ";"}], 
+  "\[IndentingNewLine]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"EndPackage", "[", "]"}], ";"}]}], "Input",
+ InitializationCell->True,
+ CellChangeTimes->{{3.572537271601638*^9, 3.5725375530227346`*^9}, {
+  3.57253762498985*^9, 3.5725376451490035`*^9}, {3.6155983392873716`*^9, 
+  3.6155984265663643`*^9}, {3.615598503690775*^9, 3.615598546307213*^9}, {
+  3.6155986857231865`*^9, 3.6155987584923487`*^9}, {3.615598879864291*^9, 
+  3.6155988807173395`*^9}, {3.6168525914460945`*^9, 3.6168525920141273`*^9}}]
+},
+WindowSize->{707, 817},
+WindowMargins->{{Automatic, -783}, {Automatic, 31}},
+FrontEndVersion->"10.0 for Microsoft Windows (64-bit) (July 1, 2014)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[557, 20, 22291, 521, 2952, "Input",
+ InitializationCell->True]
+}
+]
+*)
+
+(* End of internal cache information *)
